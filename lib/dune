@@ -1,3 +1,3 @@
 (library
- (name thread-channels)
+ (name Tc)
  (modules MutexBox EasyChannel))
