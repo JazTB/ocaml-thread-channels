@@ -1,3 +1,3 @@
 (library
- (name Thread_Stuff)
+ (name thread-channels)
  (modules MutexBox EasyChannel))
