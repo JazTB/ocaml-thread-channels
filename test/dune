@@ -1,3 +1,7 @@
 (test
  (name test_thread_channels)
- (libraries Tc))
+ (libraries Tc unix))
+
+(test
+ (name test_recv_timeout)
+ (libraries Tc unix))

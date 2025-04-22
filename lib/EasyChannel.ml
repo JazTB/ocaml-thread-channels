@@ -28,3 +28,38 @@ let recv self =
         v
   in
   loop ()
+
+let recv_timeout self timeout_seconds =
+  let start_time = Unix.gettimeofday () in
+  ignore start_time;
+  let rec loop = fun () ->
+    match MutexBox.try_lock self with
+    | MutexBox.Locked ->
+      let now_time = Unix.gettimeofday () in
+      let elapsed = now_time -. start_time in
+      begin
+        match elapsed > timeout_seconds with
+        | true -> None
+        | false -> loop ()
+      end
+    | MutexBox.Unlocked value ->
+      match !value with
+      | [] ->
+        MutexBox.unlock self;
+        let now_time = Unix.gettimeofday () in
+        let elapsed = now_time -. start_time in
+        begin
+          match elapsed > timeout_seconds with
+          | true -> None
+          | false -> loop ()
+        end
+      | [v] ->
+        value := [];
+        MutexBox.unlock self;
+        Some v
+      | v :: rest ->
+        value := rest;
+        MutexBox.unlock self;
+        Some v
+  in
+  loop ()

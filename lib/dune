@@ -1,3 +1,4 @@
 (library
  (name Tc)
- (modules MutexBox EasyChannel))
+ (modules MutexBox EasyChannel)
+ (libraries unix))
